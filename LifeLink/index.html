@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lifelink</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; }
+  h1 { color: #990011; }
+  input, select, button { width: 100%; padding: 10px; margin: 6px 0; font-size: 15px; }
+  button { background: #990011; color: white; border: none; cursor: pointer; }
+  .result { border: 1px solid #ddd; padding: 12px; margin-top: 8px; border-radius: 6px; }
+  .donor { display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<h1>Lifelink</h1>
+<h3>Request Blood</h3>
+<select id="bloodType">
+  <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+  <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
+</select>
+<input id="city" placeholder="City" value="Gwalior">
+<select id="urgency">
+  <option>Critical</option><option>Medium</option><option>Low</option>
+</select>
+<button onclick="submitRequest()">Submit Request</button>
+
+<div id="output"></div>
+
+<script>
+// ---- DUMMY DATA (replace later with Firebase or real data) ----
+const bloodBanks = [
+  { name: "Gwalior City Blood Bank", city: "Gwalior", stock: { "O+": 12, "A+": 0, "B+": 5, "O-": 0 } },
+  { name: "MITS Community Blood Bank", city: "Gwalior", stock: { "O+": 0, "A+": 0, "B+": 0, "O-": 0 } },
+];
+
+const donors = [
+  { name: "Rahul Sharma", bloodType: "O-", city: "Gwalior", trustScore: 92 },
+  { name: "Ayesha Khan", bloodType: "A+", city: "Gwalior", trustScore: 85 },
+  { name: "Vikram Singh", bloodType: "O-", city: "Gwalior", trustScore: 78 },
+  { name: "Priya Nair", bloodType: "A+", city: "Gwalior", trustScore: 70 },
+];
+
+function submitRequest() {
+  const bloodType = document.getElementById("bloodType").value;
+  const city = document.getElementById("city").value.trim();
+  const urgency = document.getElementById("urgency").value;
+  const output = document.getElementById("output");
+  output.innerHTML = "";
+
+  // Step 1: check blood bank stock first
+  const bank = bloodBanks.find(b => b.city.toLowerCase() === city.toLowerCase() && b.stock[bloodType] > 0);
+
+  if (bank) {
+    output.innerHTML = `<div class="result"><b>Stock available at ${bank.name}</b><br>
+    ${bank.stock[bloodType]} units of ${bloodType} in stock.</div>`;
+    return;
+  }
+
+  // Step 2: no stock -> show ranked donors
+  const matches = donors
+    .filter(d => d.bloodType === bloodType && d.city.toLowerCase() === city.toLowerCase())
+    .sort((a, b) => b.trustScore - a.trustScore);
+
+  if (matches.length === 0) {
+    output.innerHTML = `<div class="result">No blood bank stock or donors found nearby for ${bloodType}. (Urgency: ${urgency})</div>`;
+    return;
+  }
+
+  let html = `<div class="result"><b>No bank stock found. Matched donors (ranked by trust score):</b>`;
+  matches.forEach(d => {
+    html += `<div class="donor"><span>${d.name}</span><span>Trust ${d.trustScore}</span></div>`;
+  });
+  html += `</div>`;
+  output.innerHTML = html;
+}
+</script>
+</body>
+</html>
