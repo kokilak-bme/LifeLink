@@ -17,10 +17,7 @@ Blood and organ matching is often fragmented and reactive, causing delays during
 
 ## PPT
 
-(https://1drv.ms/p/c/1517C58AC01E8D5C/IQDphMRAT6ViSrVACN3IO3dzAX3F_YKvYvg0EHszMHDZ10w?e=McyNfT)
-
-## Live Demo
-"D:\LifeLink\Recording lifelink.mp4"
+https://1drv.ms/p/c/1517C58AC01E8D5C/IQDphMRAT6ViSrVACN3IO3dzAX3F_YKvYvg0EHszMHDZ10w?e=McyNfT
 
 
 ## Technology Stack
